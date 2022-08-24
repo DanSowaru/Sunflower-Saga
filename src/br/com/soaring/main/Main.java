@@ -1,4 +1,4 @@
-package main;
+package br.com.soaring.main;
 
 import javax.swing.*;
 
@@ -14,7 +14,7 @@ public class Main {
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel); // importamos e adicionamos à janela o gamePanel.
 
-        window.pack();
+        window.pack(); // Faz a janela se adaptar ao tamanho configurado nos subcompenentes (no caso o GamePanel);
 
         window.setLocationRelativeTo(null); //Não especifica a posição da janela, centraliza.
         window.setVisible(true);
