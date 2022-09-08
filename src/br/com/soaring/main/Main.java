@@ -19,5 +19,7 @@ public class Main {
         window.setLocationRelativeTo(null); //Não especifica a posição da janela, centraliza.
         window.setVisible(true);
 
+        gamePanel.startGameThread();
+
     }
 }

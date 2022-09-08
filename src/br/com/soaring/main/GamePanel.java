@@ -15,7 +15,9 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenCol; // 768 px
     final int screenHeight = tileSize * maxScreenRow; // 576 px
 
-    Thread gameThread; // The game will run on this thread. This works in constant flow.
+    Thread gameThread; // The game will run on this thread. This works in constant flow;
+    // The game runs ins a concept of time flowing, frames per second;
+    // To implement this Thread, we implements Runnable on class and use a run() method;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // seta o tamanho dessa classe;
@@ -32,6 +34,30 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
+
+//        while(gameThread != null);
+        while (gameThread.isAlive()) {
+
+            update(); // Update information (character position, etc);
+            repaint(); // Draw the screen with the update information (is calling the paintComponent method);
+        }
+    }
+
+    // To update live the information that will be processed i real-time and rendered in the screen (such as character position);
+    public void update() {
+
+    }
+
+    // To render the updated information on screen. It passes the Graphics class, that has functions to draw objects on the screen;
+    public void paintComponent(Graphics graphics) {
+
+        super.paintComponent(graphics); // We overwrite the JPanel paintComponent
+        Graphics2D graphics2D = (Graphics2D) graphics; // Then we convert the graphics to 2D;
+        graphics2D.setColor(Color.white); // Sets a color for drawing objects;
+
+        graphics2D.fillRect(100, 100, tileSize, tileSize); // draws a rectangle (position X, position Y, width, height);
+
+        graphics2D.dispose(); // dispose of this graphics context and release any system resources that it is using. A good practice to save memory;
 
     }
 }
