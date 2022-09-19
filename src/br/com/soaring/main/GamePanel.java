@@ -1,17 +1,19 @@
 package br.com.soaring.main;
 
+import br.com.soaring.entity.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
     // Screen Settings
-    final int originalTileSize = 16; // Tamanho da tela 16x16 tiles;
-    final int scale = 3; // 16 pixels é pequeno em HD, então escalamos os sprites em 3x;
-    final int tileSize = originalTileSize * scale;
+    final int originalTileSize = 64; // Tamanho de cada "tile" que formará a tela 32x32 tiles;
+    final int scale = 1; // 32 pixels é pequeno em HD, então escalamos os sprites em 2x;
+    public final int tileSize = originalTileSize * scale;
 
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
+    final int maxScreenCol = 12; // 16 se 16x3, 24 se 32px, 12 se 32x2
+    final int maxScreenRow = 9; // 12 se 16x3, 18 se 32px, 9 se 32x2
     final int screenWidth = tileSize * maxScreenCol; // 768 px
     final int screenHeight = tileSize * maxScreenRow; // 576 px
 
@@ -23,10 +25,8 @@ public class GamePanel extends JPanel implements Runnable {
     // The game runs ins a concept of time flowing, frames per second;
     // To implement this Thread, we implements Runnable on class and use a run() method;
 
-    //Set player's default position
-    int playerPositionX = 100;
-    int playerPositionY = 100;
-    int playerSpeed = 4;
+    Player player = new Player(this, keyHandler);
+
 
 
     public GamePanel() {
@@ -42,33 +42,70 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
+    // SLEEP METHOD
     @Override
     public void run() {
+
+        double drawInterval = 1000000000 / FPS; // Instead of drawing the screen every 1 000 000 000 nanosecond, we can do it every 0.016 seconds, if we divide that number by the FPS. This will slow down the processing and drawing.
+
+        double nextDrawTime = System.nanoTime() + drawInterval; // we add a point in time to the next draw;
+        // System.nanoTime() = Returns the current value of the running Java Virtual Machine high-resolution time source, in nanosseconds;
+
+        int fpsCounter = 0;
 
 //        while(gameThread != null);
         while (gameThread.isAlive()) {
 
-            long currentTime = System.nanoTime(); // Returns the current value of the running Java Virtual Machine high-resolution time source, in nanosseconds;
-
             update(); // Update information (character position, etc);
             repaint(); // Draw the screen with the update information (is calling the paintComponent method);
+
+            //After updating and repaint, now let's sleep:
+            try {
+                double remainingTime = nextDrawTime - System.nanoTime(); // we mark on the clock the next drawing time
+                remainingTime = remainingTime/1000000; // we convert nanoseconds to milliseconds, the sleep() uses it.
+
+                if (remainingTime < 0) remainingTime = 0; // just to round to 0 in case;
+
+                Thread.sleep((long) remainingTime);
+
+                nextDrawTime += drawInterval;
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
 
+//    // DELTA METHOD
+//    @Override
+//    public void run() {
+//
+//        double drawInterval = 1000000000 / FPS;
+//        double delta = 0;
+//        long lastTime = System.nanoTime();
+//        long currentTime;
+//
+//        while (gameThread.isAlive()) {
+//
+//            currentTime = System.nanoTime();
+//            delta += (currentTime - lastTime) / drawInterval;
+//            lastTime = currentTime;
+//
+//            if (delta >= 1) {
+//                update();
+//                repaint();
+//                delta--;
+//            }
+//
+//
+//        }
+//    }
+
+
     // To update live the information that will be processed i real-time and rendered in the screen (such as character position);
     public void update() {
-
-        //In Java, the upper left corner is X:0 Y:0. X values increases to the RIGHT, Y values increases as they go DOWN;
-        if (keyHandler.upPressed == true) {
-            playerPositionY -= playerSpeed;
-        } else if (keyHandler.downPressed == true) {
-            playerPositionY += playerSpeed;
-        } else if (keyHandler.leftPressed == true) {
-            playerPositionX -= playerSpeed;
-        } else if (keyHandler.rightPressed == true) {
-            playerPositionX += playerSpeed;
-        }
+        player.update();
     }
 
 
@@ -79,9 +116,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D graphics2D = (Graphics2D) graphics; // Then we convert the graphics to 2D;
 
-        graphics2D.setColor(Color.white); // Sets a color for drawing objects;
-
-        graphics2D.fillRect(playerPositionX, playerPositionY, tileSize, tileSize); // draws a rectangle (position X, position Y, width, height);
+        player.draw(graphics2D);
 
         graphics2D.dispose(); // dispose of this graphics context and release any system resources that it is using. A good practice to save memory;
 

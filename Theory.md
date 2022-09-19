@@ -10,4 +10,5 @@ On the Thread, we will:
   * This one is made by the method update();
 * DRAW : draw the screen with the update information;
   * This one is made by the method paintComponent();
-  * 
+
+To reduce the processing speed to match the 60 FPS, we can divide the processing speed (1.000.000.000 nanoseconds) by the desired FPS.
