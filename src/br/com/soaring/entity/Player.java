@@ -110,11 +110,15 @@ public class Player extends Entity {
                 break;
             case "left":
                 if (spriteNum == 1) image = left1;
-                if (spriteNum == 2) image = left2;
+                if (spriteNum == 2) image = leftIdle;
+                if (spriteNum == 3) image = left2;
+                if (spriteNum == 4) image = leftIdle;
                 break;
             case "right":
                 if (spriteNum == 1) image = right1;
-                if (spriteNum == 2) image = right2;
+                if (spriteNum == 2) image = rightIdle;
+                if (spriteNum == 3) image = right2;
+                if (spriteNum == 4) image = rightIdle;
         }
 
         graphics2D.drawImage(image, positionX, positionY, gamePanel.tileSize, gamePanel.tileSize, null);

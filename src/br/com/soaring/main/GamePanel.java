@@ -105,6 +105,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // To update live the information that will be processed i real-time and rendered in the screen (such as character position);
     public void update() {
+
         player.update();
     }
 
