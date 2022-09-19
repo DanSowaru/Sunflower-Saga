@@ -1,6 +1,7 @@
 package br.com.soaring.main;
 
 import br.com.soaring.entity.Player;
+import br.com.soaring.tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +13,14 @@ public class GamePanel extends JPanel implements Runnable {
     final int scale = 1; // 32 pixels é pequeno em HD, então escalamos os sprites em 2x;
     public final int tileSize = originalTileSize * scale;
 
-    final int maxScreenCol = 12; // 16 se 16x3, 24 se 32px, 12 se 32x2
-    final int maxScreenRow = 9; // 12 se 16x3, 18 se 32px, 9 se 32x2
+    public final int maxScreenCol = 12; // 16 se 16x3, 24 se 32px, 12 se 32x2
+    public final int maxScreenRow = 9; // 12 se 16x3, 18 se 32px, 9 se 32x2
     final int screenWidth = tileSize * maxScreenCol; // 768 px
     final int screenHeight = tileSize * maxScreenRow; // 576 px
 
     int FPS = 60;
+
+    TileManager tileManager = new TileManager(this);
 
     KeyHandler keyHandler = new KeyHandler();
 
@@ -117,6 +120,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D graphics2D = (Graphics2D) graphics; // Then we convert the graphics to 2D;
 
+        tileManager.draw(graphics2D); // this works on layers. We draw tiles first, players last.
         player.draw(graphics2D);
 
         graphics2D.dispose(); // dispose of this graphics context and release any system resources that it is using. A good practice to save memory;
