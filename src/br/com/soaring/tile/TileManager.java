@@ -4,19 +4,23 @@ import br.com.soaring.main.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class TileManager {
     GamePanel gamePanel;
     Tile[] tiles;
 
-    int mapTileNumber[][];
+    int mapTileCoordinates[][];
 
-    public TileManager(GamePanel gamePanel) {
+    public TileManager(GamePanel gamePanel) throws IOException {
         this.gamePanel = gamePanel;
         tiles = new Tile[10];
-        this.mapTileNumber = new int[gamePanel.maxScreenRow][gamePanel.maxScreenCol];
+        this.mapTileCoordinates = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
         getTileImage();
+        loadMap("../res/maps/sample.txt");
     }
 
     public void getTileImage() {
@@ -32,27 +36,58 @@ public class TileManager {
         }
     }
 
-    public void loadMap() {
+    public void loadMap(String filePath) throws IOException {
+        try {
+            InputStream inputStream = getClass().getResourceAsStream(filePath);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            int column = 0;
+            int row = 0;
+
+            while (column < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
+
+                String line = bufferedReader.readLine();
+
+                while (column < gamePanel.maxScreenCol) {
+
+                    String rowTiles[] = line.split(" "); // split the line around the given expression (" ");
+                    int retrievedTile = Integer.parseInt(rowTiles[column]);
+                    mapTileCoordinates[column][row] = retrievedTile;
+                    column++;
+                }
+                if (column == gamePanel.maxScreenCol) {
+                    column = 0;
+                    row++;
+                }
+            }
+            bufferedReader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     public void draw(Graphics2D graphics2D) {
 
-        int col = 0;
+        int column = 0;
         int row = 0;
         int X = 0;
         int Y = 0;
 
-        while (col < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
-                graphics2D.drawImage(tiles[0].tileImage, X, Y, gamePanel.tileSize, gamePanel.tileSize, null);
-                col++;
-                X += gamePanel.tileSize;
+        while (column < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
 
-                if (col == gamePanel.maxScreenCol) {
-                    col = 0;
-                    X = 0;
-                    row++;
-                    Y += gamePanel.tileSize;
-                }
+            int tileUnit = mapTileCoordinates[column][row];
+
+            graphics2D.drawImage(tiles[tileUnit].tileImage, X, Y, gamePanel.tileSize, gamePanel.tileSize, null);
+            column++;
+            X += gamePanel.tileSize;
+
+            if (column == gamePanel.maxScreenCol) {
+                column = 0;
+                X = 0;
+                row++;
+                Y += gamePanel.tileSize;
+            }
         }
 
 

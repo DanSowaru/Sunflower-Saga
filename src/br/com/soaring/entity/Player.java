@@ -51,7 +51,7 @@ public class Player extends Entity {
         if (keyHandler.keyPressed == true) {
             // counter to switch sprites to animation;
             spriteCounter++;
-            if (spriteCounter > 8) {
+            if (spriteCounter > 6) {
 
                 switch (spriteNum) {
                     case 1: spriteNum = 2;
@@ -119,6 +119,24 @@ public class Player extends Entity {
                 if (spriteNum == 2) image = rightIdle;
                 if (spriteNum == 3) image = right2;
                 if (spriteNum == 4) image = rightIdle;
+        }
+
+        // Verificador para colocar o personagem na imagem de Idle se nenhuma tecla estiver pressionada;
+        if (!keyHandler.keyPressed) {
+            switch (direction) {
+                case "up":
+                    image = upIdle;
+                    break;
+                    case "down":
+                    image = downIdle;
+                    break;
+                    case "left":
+                    image = leftIdle;
+                    break;
+                    case "right":
+                    image = rightIdle;
+                    break;
+            }
         }
 
         graphics2D.drawImage(image, positionX, positionY, gamePanel.tileSize, gamePanel.tileSize, null);

@@ -45,18 +45,19 @@ public class KeyHandler implements KeyListener {
 
         if (code == KeyEvent.VK_W) {
             upPressed = false;
-            keyPressed = false;
         }
         if (code == KeyEvent.VK_S) {
             downPressed = false;
-            keyPressed = false;
         }
         if (code == KeyEvent.VK_A) {
             leftPressed = false;
-            keyPressed = false;
         }
         if (code == KeyEvent.VK_D) {
             rightPressed = false;
+        }
+
+        // this guarantees that the animation doesn't stop when you walk diagonally, thus pressing and releasing just one directional button;
+        if (!leftPressed && !downPressed && !upPressed && !rightPressed) {
             keyPressed = false;
         }
 
