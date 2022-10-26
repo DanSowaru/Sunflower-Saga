@@ -1,10 +1,11 @@
 package br.com.soaring.main;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         JFrame window = new JFrame(); // cria nova janela;
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permite que a janela feche quando clicar no X

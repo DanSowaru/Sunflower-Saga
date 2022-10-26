@@ -13,16 +13,22 @@ public class Player extends Entity {
     GamePanel gamePanel;
     KeyHandler keyHandler;
 
+    public final int playerScreenPositionX, playerScreenPositionY; // screen coordinates
+
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
+
+        playerScreenPositionX = gamePanel.screenWidth/2 - (gamePanel.tileSize/2); // Player position is located at the center of the screen, that being, the half lenght of width and height. We subtract half tile because his upper left corner was at the center of the screen;
+        playerScreenPositionY = gamePanel.screenHeight/2 - (gamePanel.tileSize/2);
+
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
-        positionX = 100;
-        positionY = 100;
+        worldPositionX = gamePanel.tileSize * 23 ; // position of player in world. he is positioned 23 tiles right and 21 down;
+        worldPositionY = gamePanel.tileSize * 21;
         speed = 3;
         direction = "down";
     }
@@ -70,19 +76,19 @@ public class Player extends Entity {
         //In Java, the upper left corner is X:0 Y:0. X values increases to the RIGHT, Y values increases as they go DOWN;
         if (keyHandler.upPressed == true) {
             direction = "up";
-            positionY -= speed;
+            worldPositionY -= speed;
         }
         if (keyHandler.downPressed == true) {
             direction = "down";
-            positionY += speed;
+            worldPositionY += speed;
         }
         if (keyHandler.leftPressed == true) {
             direction = "left";
-            positionX -= speed;
+            worldPositionX -= speed;
         }
         if (keyHandler.rightPressed == true) {
             direction = "right";
-            positionX += speed;
+            worldPositionX += speed;
         }
     }
 
@@ -90,7 +96,7 @@ public class Player extends Entity {
 
 //        graphics2D.setColor(Color.white); // Sets a color for drawing objects;
 //
-//        graphics2D.fillRect(positionX, positionY, gamePanel.tileSize, gamePanel.tileSize); // draws a rectangle (position X, position Y, width, height);
+//        graphics2D.fillRect(worldPositionX, worldPositionY, gamePanel.tileSize, gamePanel.tileSize); // draws a rectangle (position X, position Y, width, height);
 
 
         BufferedImage image = null;
@@ -139,6 +145,6 @@ public class Player extends Entity {
             }
         }
 
-        graphics2D.drawImage(image, positionX, positionY, gamePanel.tileSize, gamePanel.tileSize, null);
+        graphics2D.drawImage(image, playerScreenPositionX, playerScreenPositionY, gamePanel.tileSize, gamePanel.tileSize, null);
     }
 }

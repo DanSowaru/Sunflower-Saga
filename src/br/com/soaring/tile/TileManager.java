@@ -13,14 +13,14 @@ public class TileManager {
     GamePanel gamePanel;
     Tile[] tiles;
 
-    int mapTileCoordinates[][];
+    int[][] mapTileCoordinates;
 
     public TileManager(GamePanel gamePanel) throws IOException {
         this.gamePanel = gamePanel;
         tiles = new Tile[10];
-        this.mapTileCoordinates = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
+        this.mapTileCoordinates = new int[gamePanel.maxWorldCol][gamePanel.maxWorldRow];
         getTileImage();
-        loadMap("../res/maps/sample.txt");
+        loadMap("../res/maps/large_map.txt");
     }
 
     public void getTileImage() {
@@ -31,6 +31,12 @@ public class TileManager {
             tiles[1].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/wall1.png"));
             tiles[2] = new Tile();
             tiles[2].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/water1.gif"));
+            tiles[3] = new Tile();
+            tiles[3].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/sand1.png"));
+            tiles[4] = new Tile();
+            tiles[4].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/tree_grass1.png"));
+            tiles[5] = new Tile();
+            tiles[5].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/earth1.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,18 +50,18 @@ public class TileManager {
             int column = 0;
             int row = 0;
 
-            while (column < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
+            while (column < gamePanel.maxWorldCol && row < gamePanel.maxWorldRow) {
 
                 String line = bufferedReader.readLine();
 
-                while (column < gamePanel.maxScreenCol) {
+                while (column < gamePanel.maxWorldCol) {
 
-                    String rowTiles[] = line.split(" "); // split the line around the given expression (" ");
+                    String[] rowTiles = line.split(" "); // split the line around the given expression (" ");
                     int retrievedTile = Integer.parseInt(rowTiles[column]);
                     mapTileCoordinates[column][row] = retrievedTile;
                     column++;
                 }
-                if (column == gamePanel.maxScreenCol) {
+                if (column == gamePanel.maxWorldCol) {
                     column = 0;
                     row++;
                 }
@@ -65,31 +71,40 @@ public class TileManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
     public void draw(Graphics2D graphics2D) {
 
-        int column = 0;
-        int row = 0;
-        int X = 0;
-        int Y = 0;
+        int worldCol = 0;
+        int worldRow = 0;
 
-        while (column < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
+        while (worldCol < gamePanel.maxWorldCol && worldRow < gamePanel.maxWorldRow) {
 
-            int tileUnit = mapTileCoordinates[column][row];
+            int tileUnit = mapTileCoordinates[worldCol][worldRow]; // fetching the tile unit of the line and column;
+            int worldX = worldCol * gamePanel.tileSize; // the X coordinate in each tile draw;
+            int worldY = worldRow * gamePanel.tileSize; // the Y coordinate in each tile draw;
+            int screenX = worldX - gamePanel.player.worldPositionX + gamePanel.player.playerScreenPositionX; // used to verify if the current screen tile being rendered is in range of the character screen range;
+            int screenY = worldY - gamePanel.player.worldPositionY + gamePanel.player.playerScreenPositionY; //
 
-            graphics2D.drawImage(tiles[tileUnit].tileImage, X, Y, gamePanel.tileSize, gamePanel.tileSize, null);
-            column++;
-            X += gamePanel.tileSize;
+            if (isTileInRangeOfPlayer(worldX, worldY)) {
+                graphics2D.drawImage(tiles[tileUnit].tileImage, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+            }
 
-            if (column == gamePanel.maxScreenCol) {
-                column = 0;
-                X = 0;
-                row++;
-                Y += gamePanel.tileSize;
+            worldCol++;
+
+            if (worldCol == gamePanel.maxWorldCol) {
+                worldCol = 0;
+                worldRow++;
             }
         }
+    }
 
-
+    // We verify if the tile is in range of the character screen range in all 4 directions starting from the character position; We expand one tile of range to render a margin of map outside of the program screen;
+    private boolean isTileInRangeOfPlayer(int worldX, int worldY) {
+        return
+                worldX + gamePanel.tileSize > gamePanel.player.worldPositionX - gamePanel.player.playerScreenPositionX &&
+                worldX - gamePanel.tileSize < gamePanel.player.worldPositionX + gamePanel.player.playerScreenPositionX &&
+                worldY + gamePanel.tileSize > gamePanel.player.worldPositionY - gamePanel.player.playerScreenPositionY &&
+                worldY - gamePanel.tileSize < gamePanel.player.worldPositionY + gamePanel.player.playerScreenPositionY;
     }
 }

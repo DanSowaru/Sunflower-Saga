@@ -5,19 +5,28 @@ import br.com.soaring.tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    // Screen Settings
-    final int originalTileSize = 64; // Tamanho de cada "tile" que formará a tela 32x32 tiles;
-    final int scale = 1; // 32 pixels é pequeno em HD, então escalamos os sprites em 2x;
+    // SCREEN SETTINGS
+    final int originalTileSize = 64; // Tamanho de cada "tile" que formará a tela 64x64 tiles;
+    final int scale = 1; // usado pra escalar (zoom) na tela. Nesse momento não usado;
     public final int tileSize = originalTileSize * scale;
 
     public final int maxScreenCol = 12; // 16 se 16x3, 24 se 32px, 12 se 32x2
     public final int maxScreenRow = 9; // 12 se 16x3, 18 se 32px, 9 se 32x2
-    final int screenWidth = tileSize * maxScreenCol; // 768 px
-    final int screenHeight = tileSize * maxScreenRow; // 576 px
+    public final int screenWidth = tileSize * maxScreenCol; // 768 px
+    public final int screenHeight = tileSize * maxScreenRow; // 576 px
 
+
+    // WORLD SETTINGS
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
+
+    // FPS
     int FPS = 60;
 
     TileManager tileManager = new TileManager(this);
@@ -28,11 +37,11 @@ public class GamePanel extends JPanel implements Runnable {
     // The game runs ins a concept of time flowing, frames per second;
     // To implement this Thread, we implements Runnable on class and use a run() method;
 
-    Player player = new Player(this, keyHandler);
+    public Player player = new Player(this, keyHandler);
 
 
 
-    public GamePanel() {
+    public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // seta o tamanho dessa classe;
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // Se true, o drawing desse componente será feito em um buffer de painting offscreen. Habilitar isso melhora a perfomance do jogo;
@@ -67,7 +76,7 @@ public class GamePanel extends JPanel implements Runnable {
                 double remainingTime = nextDrawTime - System.nanoTime(); // we mark on the clock the next drawing time
                 remainingTime = remainingTime/1000000; // we convert nanoseconds to milliseconds, the sleep() uses it.
 
-                if (remainingTime < 0) remainingTime = 0; // just to round to 0 in case;
+                if (remainingTime < 0) remainingTime = 0; // round to 0 just in case;
 
                 Thread.sleep((long) remainingTime);
 
