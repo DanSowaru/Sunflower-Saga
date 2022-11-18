@@ -12,3 +12,7 @@ On the Thread, we will:
   * This one is made by the method paintComponent();
 
 To reduce the processing speed to match the 60 FPS, we can divide the processing speed (1.000.000.000 nanoseconds) by the desired FPS.
+
+Smaller hitboxes help gameplay flow better;
+
+The collision detection is made by checkin the four corners of the visual object we are trying to verify;

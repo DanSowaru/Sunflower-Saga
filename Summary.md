@@ -17,3 +17,18 @@
 * Created worldX and worldY in TileManager.draw(). It receives the col and row index, times the tile size;
 * Created screenX and Y that receives worldXY - gamePanel.player.worldXY + gamePanel.player.screenXY;
 * Created an IF inside the WHILE in TileManager.draw() to limit the map rendering to the screen range, to maximize performance;
+
+### 6 Collision Detection
+* Added true value to Tile.collision in TileManager.getTileImage();
+* Created a Rectangle called solidArea in Entity;
+* Created a boolean collision in Entity;
+* Intantiated a rectangle in Player constructor. The rectangle is drawn inside the player draw area and is smaller than the player;
+* Created a CollisionChecker class. Receives a GamePanel in constructor;
+* Created CollisionChecker.checkTile(Entity) to check collision with other entities;
+* Instantiated a CollisionChecker in GamePanel;
+* add false to PlayerEntity.collision in Player.update();
+* imediate after, call the CollisionChecker.checkCollision(this.player);
+* Added 4 coordinates in checkTile() usinge the rectangle values to find their borders;
+* Created two cols and rows tight after, then two test tiles;
+* created a switch that test the btwo tiles and apply the collision when true;
+* Created a IF collision==false after the collision check in Player and moved the movement code (world += speed) to there;

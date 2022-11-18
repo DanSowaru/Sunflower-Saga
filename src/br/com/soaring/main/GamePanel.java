@@ -19,7 +19,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol; // 768 px
     public final int screenHeight = tileSize * maxScreenRow; // 576 px
 
-
     // WORLD SETTINGS
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
@@ -29,20 +28,16 @@ public class GamePanel extends JPanel implements Runnable {
     // FPS
     int FPS = 60;
 
-    TileManager tileManager = new TileManager(this);
-
-    KeyHandler keyHandler = new KeyHandler();
-
-    Thread gameThread; // The game will run on this thread. This works in constant flow;
-    // The game runs ins a concept of time flowing, frames per second;
-    // To implement this Thread, we implements Runnable on class and use a run() method;
-
+    public TileManager tileManager = new TileManager(this);
+    public KeyHandler keyHandler = new KeyHandler();
+    public Thread gameThread; // The game will run on this thread. This works in constant flow; The game runs in a concept of time flowing, frames per second; To implement this Thread, we implement Runnable on class and use a run() method;
+    public CollisionChecker collisionChecker = new CollisionChecker(this);
     public Player player = new Player(this, keyHandler);
 
 
 
     public GamePanel() throws IOException {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // seta o tamanho dessa classe;
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // Sets the dimensions of this panel;
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // Se true, o drawing desse componente será feito em um buffer de painting offscreen. Habilitar isso melhora a perfomance do jogo;
         this.addKeyListener(keyHandler);
@@ -50,7 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread() {
-        gameThread = new Thread(this); //Passamos uma Thread com o GamePanel dentro
+        gameThread = new Thread(this); //We pass a thread with the gamePanel inside;
         gameThread.start();
     }
 
@@ -69,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
         while (gameThread.isAlive()) {
 
             update(); // Update information (character position, etc);
-            repaint(); // Draw the screen with the update information (is calling the paintComponent method);
+            repaint(); // Draw the screen with the updated information (is calling the paintComponent method);
 
             //After updating and repaint, now let's sleep:
             try {
@@ -117,7 +112,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     // To update live the information that will be processed i real-time and rendered in the screen (such as character position);
     public void update() {
-
         player.update();
     }
 

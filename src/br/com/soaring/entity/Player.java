@@ -10,24 +10,26 @@ import java.io.IOException;
 
 public class Player extends Entity {
 
+    public final int playerScreenPositionX, playerScreenPositionY; // screen coordinates
     GamePanel gamePanel;
     KeyHandler keyHandler;
 
-    public final int playerScreenPositionX, playerScreenPositionY; // screen coordinates
-
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
+
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
 
-        playerScreenPositionX = gamePanel.screenWidth/2 - (gamePanel.tileSize/2); // Player position is located at the center of the screen, that being, the half lenght of width and height. We subtract half tile because his upper left corner was at the center of the screen;
-        playerScreenPositionY = gamePanel.screenHeight/2 - (gamePanel.tileSize/2);
+        playerScreenPositionX = gamePanel.screenWidth / 2 - (gamePanel.tileSize / 2); // Player position is located at the center of the screen, that being, the half lenght of width and height. We subtract half tile because his upper left corner was at the center of the screen;
+        playerScreenPositionY = gamePanel.screenHeight / 2 - (gamePanel.tileSize / 2);
+
+        solidArea = new Rectangle(18, 36, 28, 28);
 
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
-        worldPositionX = gamePanel.tileSize * 23 ; // position of player in world. he is positioned 23 tiles right and 21 down;
+        worldPositionX = gamePanel.tileSize * 23; // position of player in world. he is positioned 23 tiles right and 21 down;
         worldPositionY = gamePanel.tileSize * 21;
         speed = 3;
         direction = "down";
@@ -54,50 +56,48 @@ public class Player extends Entity {
 
     public void update() {
 
-        if (keyHandler.keyPressed == true) {
-            // counter to switch sprites to animation;
+        if (keyHandler.directionalKeyPressed) {
+
+            //In Java, the upper left corner is X:0 Y:0. X values increases to the RIGHT, Y values increases as they go DOWN;
+            if (keyHandler.upPressed) direction = "up";
+            if (keyHandler.downPressed) direction = "down";
+            if (keyHandler.leftPressed) direction = "left";
+            if (keyHandler.rightPressed) direction = "right";
+
+            //We check for collision in every update loop; If false, character move in world position;
+            collision = false;
+            gamePanel.collisionChecker.checkTile(this);
+            if (!collision) {
+                if (keyHandler.upPressed) worldPositionY -= speed;
+                if (keyHandler.downPressed) worldPositionY += speed;
+                if (keyHandler.leftPressed) worldPositionX -= speed;
+                if (keyHandler.rightPressed) worldPositionX += speed;
+            }
+        }
+
+        // Spriter counter to switch sprites to animation;
+        if (keyHandler.directionalKeyPressed == true) {
             spriteCounter++;
             if (spriteCounter > 6) {
-
                 switch (spriteNum) {
-                    case 1: spriteNum = 2;
-                    break;
-                    case 2: spriteNum = 3;
-                    break;
-                    case 3: spriteNum = 4;
-                    break;
-                    case 4: spriteNum = 1;
+                    case 1:
+                        spriteNum = 2;
+                        break;
+                    case 2:
+                        spriteNum = 3;
+                        break;
+                    case 3:
+                        spriteNum = 4;
+                        break;
+                    case 4:
+                        spriteNum = 1;
                 }
                 spriteCounter = 0;
             }
         }
-
-
-        //In Java, the upper left corner is X:0 Y:0. X values increases to the RIGHT, Y values increases as they go DOWN;
-        if (keyHandler.upPressed == true) {
-            direction = "up";
-            worldPositionY -= speed;
-        }
-        if (keyHandler.downPressed == true) {
-            direction = "down";
-            worldPositionY += speed;
-        }
-        if (keyHandler.leftPressed == true) {
-            direction = "left";
-            worldPositionX -= speed;
-        }
-        if (keyHandler.rightPressed == true) {
-            direction = "right";
-            worldPositionX += speed;
-        }
     }
 
     public void draw(Graphics2D graphics2D) {
-
-//        graphics2D.setColor(Color.white); // Sets a color for drawing objects;
-//
-//        graphics2D.fillRect(worldPositionX, worldPositionY, gamePanel.tileSize, gamePanel.tileSize); // draws a rectangle (position X, position Y, width, height);
-
 
         BufferedImage image = null;
 
@@ -128,22 +128,26 @@ public class Player extends Entity {
         }
 
         // Verificador para colocar o personagem na imagem de Idle se nenhuma tecla estiver pressionada;
-        if (!keyHandler.keyPressed) {
+        if (!keyHandler.directionalKeyPressed) {
             switch (direction) {
                 case "up":
                     image = upIdle;
                     break;
-                    case "down":
+                case "down":
                     image = downIdle;
                     break;
-                    case "left":
+                case "left":
                     image = leftIdle;
                     break;
-                    case "right":
+                case "right":
                     image = rightIdle;
                     break;
             }
         }
+
+//        graphics2D.setColor(Color.white); // Sets a color for drawing objects;
+//        graphics2D.fillRect(worldPositionX, worldPositionY, gamePanel.tileSize, gamePanel.tileSize); // draws a rectangle (position X, position Y, width, height);
+
 
         graphics2D.drawImage(image, playerScreenPositionX, playerScreenPositionY, gamePanel.tileSize, gamePanel.tileSize, null);
     }

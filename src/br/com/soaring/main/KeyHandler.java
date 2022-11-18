@@ -5,12 +5,11 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed, keyPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, directionalKeyPressed;
 
 
     @Override
     public void keyTyped(KeyEvent e) {
-
 
     }
 
@@ -21,19 +20,19 @@ public class KeyHandler implements KeyListener {
 
         if (code == KeyEvent.VK_W) {
             upPressed = true;
-            keyPressed = true;
+            directionalKeyPressed = true;
         }
         if (code == KeyEvent.VK_S) {
             downPressed = true;
-            keyPressed = true;
+            directionalKeyPressed = true;
         }
         if (code == KeyEvent.VK_A) {
             leftPressed = true;
-            keyPressed = true;
+            directionalKeyPressed = true;
         }
         if (code == KeyEvent.VK_D) {
             rightPressed = true;
-            keyPressed = true;
+            directionalKeyPressed = true;
         }
 
     }
@@ -58,7 +57,7 @@ public class KeyHandler implements KeyListener {
 
         // this guarantees that the animation doesn't stop when you walk diagonally, thus pressing and releasing just one directional button;
         if (!leftPressed && !downPressed && !upPressed && !rightPressed) {
-            keyPressed = false;
+            directionalKeyPressed = false;
         }
 
     }

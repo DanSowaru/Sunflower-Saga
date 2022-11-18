@@ -11,9 +11,9 @@ import java.io.InputStreamReader;
 
 public class TileManager {
     GamePanel gamePanel;
-    Tile[] tiles;
+    public Tile[] tiles;
 
-    int[][] mapTileCoordinates;
+    public int[][] mapTileCoordinates;
 
     public TileManager(GamePanel gamePanel) throws IOException {
         this.gamePanel = gamePanel;
@@ -27,16 +27,25 @@ public class TileManager {
         try {
             tiles[0] = new Tile();
             tiles[0].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/grass1.png"));
+
             tiles[1] = new Tile();
             tiles[1].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/wall1.png"));
+            tiles[1].collision = true;
+
             tiles[2] = new Tile();
             tiles[2].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/water1.gif"));
+            tiles[2].collision = true;
+
             tiles[3] = new Tile();
             tiles[3].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/sand1.png"));
+
             tiles[4] = new Tile();
             tiles[4].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/tree_grass1.png"));
+            tiles[4].collision = true;
+
             tiles[5] = new Tile();
             tiles[5].tileImage = ImageIO.read(getClass().getResourceAsStream("../res/tiles/earth1.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
