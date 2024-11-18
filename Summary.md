@@ -1,4 +1,58 @@
+This summary is based on RyiSnow's java game fundamentals.
 
+# 1 The Mechanics
+
+## Main Class
+* Main Package, Main Class;
+* In Main Class, at Main Method, create a window with:
+
+      JFrame window = new JFrame();
+
+* Then, we add the functionality to close the window by pressing X with:
+  
+      window.setDefaultClosingOperation(JFrame.EXIT_ON_CLOSE);
+
+* We block resizing the window with:
+
+      window.setResizable(false);
+
+* Add name to the window:
+
+      window.setName("Name of your game");
+
+* Do not specify the location of the window, and will be rendered at the center of the screen:
+
+      window.setLocationRelativeTo(null);
+
+* Make it visible:
+
+      window.setVisible(true);
+
+## GamePanel Class
+
+* GamePanel extends JPanel
+* We define some game screen settings here
+
+
+* We set the gameTile Size and a scaler multiplier to make it look decent in higher resolutions:
+
+      final int originalTileSize = 64;
+      final int scale = 3;
+      final int tileSize = originalTileSize * scale;
+
+* To define the **size of screen**, we define the number of **columns** and **rows** of these tiles. In this example we use a 4x3 ratio:
+
+      final int maxScreenCol = 16;
+      final int maxScreenRow = 12;
+
+      final int screenWidth = tileSize * maxScreenCol;
+      final int screenHeight = tileSize * maxScreenRow;
+
+* We set a constructor to JPanel and add a preffered size to the JPanel:
+
+      setPreferredSize(new Dimension(width, height);
+
+      
 
 ### 5 World and Camera
 * Added sand, tree and earth tile;
