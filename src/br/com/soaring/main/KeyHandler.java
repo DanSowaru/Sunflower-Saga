@@ -55,7 +55,7 @@ public class KeyHandler implements KeyListener {
             rightPressed = false;
         }
 
-        // this guarantees that the animation doesn't stop when you walk diagonally, thus pressing and releasing just one directional button;
+        // this guarantees that the animation doesn't stop when you walk diagonally, for pressing and releasing just one directional button;
         if (!leftPressed && !downPressed && !upPressed && !rightPressed) {
             directionalKeyPressed = false;
         }

@@ -1,10 +1,13 @@
 This summary is based on RyiSnow's java game fundamentals.
 
-# 1 The Mechanics
+# 1. The Mechanics
 
 ## Main Class
-* Main Package, Main Class;
+Main Package, Main Class;
+
 * In Main Class, at Main Method, create a window with:
+
+      public class Main {
 
       JFrame window = new JFrame();
 
@@ -29,10 +32,11 @@ This summary is based on RyiSnow's java game fundamentals.
       window.setVisible(true);
 
 ## GamePanel Class
+We define some game screen settings here
 
 * GamePanel extends JPanel
-* We define some game screen settings here
 
+      public class GamePanel extends JPanel { 
 
 * We set the gameTile Size and a scaler multiplier to make it look decent in higher resolutions:
 
@@ -48,13 +52,144 @@ This summary is based on RyiSnow's java game fundamentals.
       final int screenWidth = tileSize * maxScreenCol;
       final int screenHeight = tileSize * maxScreenRow;
 
-* We set a constructor to JPanel and add a preffered size to the JPanel:
+* We set a constructor to JPanel and add a preferred size to the JPanel and set a optional background color:
 
       setPreferredSize(new Dimension(width, height);
+      setBackground(Color.Black);
 
+* Setting a DoubleBuffer will make all the drawing of this component to be painted in a separate buffer offscreen:
+
+      setDoubleBuffered(true);
+
+* We add the GamePanel to the Main class and pack it, which will cause the window in Main to be resized to fit the preferred size and layouts of its subcomponents:
+
+      public class Main {
+      ...
+      GamePanel gamePanel = new GamePanel();
+      window.add(gamePanel);
+      window.pack;
+
+# 2. Game Loop and Key Inputs
+
+* The Thread is the mechanism that will run constantly and update the game in a loop. We create it in Game Panel.
+
+      Thread gameThread;
+
+* To run a Thread, the GamePanel class will implement Runnable:
+
+      public class GamePanel extends JPanel implements Runnable {
+
+* Because of that, we have to implement the obligatory methods of the Runnable interface:
+
+      @override
+      public void run() {}
+
+* Everytime that we **start** the Thread, that run() method will be called;
+* We created the Thread object before (gameThread). Now let's create a method to start it up. We instantiate our gameThread and pass (this), meaning this GamePanel class, as an arg:
+
+      public void startGameThread() {
+        gameThread = new Thread(this)
+        gameThread.start();
+      }
+* Everytime this method is called, our gameThread is going to start and the run() method will be executed. 
+* We will make the run() execute while the Thread is alive.
+
+      public void run() {
+        while (gameThread.isAlive()) {}
+
+* The run() will update the informations and draw the screen in a infinite loop.
+* The paintComponent() method is a native JPanel method to draw the screen.
+* We pass the Graphics class as an argument to paintComponent(). The Graphics class has many functions to draw objects on screen.
+* the paintComponent() method has to call the JPanel's paintComponent() method with the graphics object we passed.
+* The Graphics acts as our pencil, and we'll convert it to Graphics2D that extends the Graphics class. This is because Graphics2D gives us more sophisticated control over geometry, coordinate transformations, color management and text layout;
+
+      public void update();
+      public void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        Graphics2D graphics2D = (Graphics2D) graphics;
       
 
-### 5 World and Camera
+* Now the run() can implement these two methods. The repaint() is a native callback to the paintComponent() method:
+
+      public void run() {
+        while (gameThread.isAlive()) {
+          update();
+          repaint();
+      }
+
+* In the paintComponent() we can for example set a color, draw a rectangle and fill it with said color:
+
+      graphics2D.setColor(Color.white);
+      graphics2D.fillRect(x, y, width, height);
+      graphics2D.dispose(); // good practice to save memory
+
+## KeyHandler Class
+The class to handle the key inputs
+
+* The KeyHandler class implements KeyListener, that is a listener interface for receiving keyboard events (keystrokes). It has three inherited abstract methods:
+* We will only use keyPressed and keyRelease
+
+      public class KeyHandler implements KeyListener {
+        @Override
+        public void keyTyped(KeyEvent e) {}
+        @Override
+        public void keyPressed(KeyEvent e) {}
+        @Override
+        public void keyReleased(KeyEvent e) {}
+      }
+
+* We use `getKeyCode` to return the Integer Keycode associated with the key pressed event:
+
+        public void keyPressed(KeyEvent e) {
+          int keyCode = e.getKeyCode();
+        }
+* With this, we can map if the directional buttons (WASD) are pressed or released and add a true or false value to it.
+* We can also add a `directionalKeyPressed` to use in diagonal movement.
+
+        if (code == KeyEvent.VK_W) {
+            upPressed = true;
+            directionalKeyPressed = true;
+        }
+        if (code == KeyEvent.VK_S) {
+            downPressed = true;
+            directionalKeyPressed = true;
+        }
+        if (code == KeyEvent.VK_A) {
+            leftPressed = true;
+            directionalKeyPressed = true;
+        }
+        if (code == KeyEvent.VK_D) {
+            rightPressed = true;
+            directionalKeyPressed = true;
+        }
+
+* Diagonal movement uses 2 keys instead of one. If releasing one key stops the animation, diagonal movement wouldn't be possible, so we make sure all directional movement has stopped to cease movement animation:
+
+        if (!leftPressed && !downPressed && !upPressed && !rightPressed) {
+            directionalKeyPressed = false;
+        }
+
+## GamePanel Class
+* Now we have to instantiate our KeyHandler in GamePanel and add it in its constructor.
+* Also we ste the focus on the GamePanel to receive the key inputs.
+
+      public KeyHandler keyHandler = new KeyHandler();
+
+      public GamePanel() {
+        ...
+        this.addKeyListener(kehHandler);
+        this.setFocusable(true);
+      }
+
+* Now with keys, we can create player position variables, the pixel speed movement we want to be moved in each update, and set these position variables in
+
+      int playerX = 100;
+      int playerY = 100;
+      int playerSpeed = 4;
+
+
+
+# 5 World and Camera
 * Added sand, tree and earth tile;
 * Imported them in TileManager.getTileImage;
 * Created a 50x50 map;
@@ -72,7 +207,7 @@ This summary is based on RyiSnow's java game fundamentals.
 * Created screenX and Y that receives worldXY - gamePanel.player.worldXY + gamePanel.player.screenXY;
 * Created an IF inside the WHILE in TileManager.draw() to limit the map rendering to the screen range, to maximize performance;
 
-### 6 Collision Detection
+# 6 Collision Detection
 * Added true value to Tile.collision in TileManager.getTileImage();
 * Created a Rectangle called solidArea in Entity;
 * Created a boolean collision in Entity;
