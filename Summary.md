@@ -181,11 +181,50 @@ The class to handle the key inputs
         this.setFocusable(true);
       }
 
-* Now with keys, we can create player position variables, the pixel speed movement we want to be moved in each update, and set these position variables in
+* Now with keys, we can create player position variables, the pixel speed movement we want to be moved in each update, and set these position variables in the paintComponent() player position.
 
-      int playerX = 100;
-      int playerY = 100;
+      int playerPositionX = 100;
+      int playerPositionY = 100;
       int playerSpeed = 4;
+
+      public void paintComponent(Graphics graphics) {
+        ...
+        graphics2D.fillRect(playerPositionX, playerPositionY, width, height);
+
+* And we can map the movements to the key events:
+
+      if (keyHandler.upPressed) playerPositionY -= speed;
+      if (keyHandler.downPressed) playerPositionY += speed;
+      if (keyHandler.leftPressed) playerPositionX -= speed;
+      if (keyHandler.rightPressed) playerPositionX += speed;
+
+### FPS
+* Now we have to limit the speed of the updating down to a fixed FPS value. After that, we'll use the FPS factor to sleep our Thread every given time, in our case, the FPS (60) divided by 1000000000 (the number of nanoseconds per second), that is 0,016 Nanoseconds. 
+* The game will update every 0,016 seconds. To do that, we get the current time and get the time that will be after 0,016 nanoseconds, and update only on that marks.
+* We convert the nanoseconds to milliseconds because that's what the Sleep() uses.
+
+      public void run() {
+  
+        double drawInterval = 1000000000 / FPS;  
+        double nextDrawTime = System.nanoTime() + drawInterval;
+              
+        while (gameThread.isAlive()) {
+
+          update(); 
+          repaint();
+
+          try {
+            double remainingTime = nextDrawTime - System.nanoTime();
+            remainingTime = remainingTime/1000000;
+            if (remainingTime < 0) remainingTime = 0;
+            Thread.sleep((long) remainingTime);
+            nextDrawTime += drawInterval;
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+          }
+        }
+
+
 
 
 
