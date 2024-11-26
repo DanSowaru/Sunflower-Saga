@@ -56,8 +56,6 @@ public class Player extends Entity {
 
     public void update() {
 
-        if (keyHandler.directionalKeyPressed) {
-
             //In Java, the upper left corner is X:0 Y:0. X values increases to the RIGHT, Y values increases as they go DOWN;
             if (keyHandler.upPressed) direction = "up";
             if (keyHandler.downPressed) direction = "down";
@@ -73,10 +71,9 @@ public class Player extends Entity {
                 if (keyHandler.leftPressed) worldPositionX -= speed;
                 if (keyHandler.rightPressed) worldPositionX += speed;
             }
-        }
 
         // Spriter counter to switch sprites to animation;
-        if (keyHandler.directionalKeyPressed == true) {
+        if (keyHandler.directionalKeyPressed) {
             spriteCounter++;
             if (spriteCounter > 6) {
                 switch (spriteNum) {
@@ -125,6 +122,7 @@ public class Player extends Entity {
                 if (spriteNum == 2) image = rightIdle;
                 if (spriteNum == 3) image = right2;
                 if (spriteNum == 4) image = rightIdle;
+                break;
         }
 
         // Verificador para colocar o personagem na imagem de Idle se nenhuma tecla estiver pressionada;
@@ -144,10 +142,6 @@ public class Player extends Entity {
                     break;
             }
         }
-
-//        graphics2D.setColor(Color.white); // Sets a color for drawing objects;
-//        graphics2D.fillRect(worldPositionX, worldPositionY, gamePanel.tileSize, gamePanel.tileSize); // draws a rectangle (position X, position Y, width, height);
-
 
         graphics2D.drawImage(image, playerScreenPositionX, playerScreenPositionY, gamePanel.tileSize, gamePanel.tileSize, null);
     }

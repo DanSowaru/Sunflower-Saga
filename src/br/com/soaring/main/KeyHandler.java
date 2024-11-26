@@ -10,7 +10,7 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        //TODO: implement changing directions with same code as below;
     }
 
     @Override

@@ -324,7 +324,120 @@ Then we add some BufferedImages to our Entity class. BufferedImage describes an 
             public BufferedImage up1, up2, upIdle, down1, down2, downIdle, left1, left2, leftIdle, right1, right2, rightIdle;
             public String direction;
 
+Now with images, in the Player class we can fetch them. Right before update, we create a method for getting the player images.
 
+        public class Player extends Entity {
+
+        ...
+
+        public void getPlayerImage() {
+            try {
+                up1 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_up_1.png"));
+                up2 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_up_2.png"));
+                upIdle = ImageIO.read(getClass().getResourceAsStream("../res/player/player_up_idle.png"));
+                down1 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_down_1.png"));
+                down2 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_down_2.png"));
+                downIdle = ImageIO.read(getClass().getResourceAsStream("../res/player/player_down_idle.png"));
+                left1 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_left_1.png"));
+                left2 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_left_2.png"));
+                leftIdle = ImageIO.read(getClass().getResourceAsStream("../res/player/player_left_idle.png"));
+                right1 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_right_1.png"));
+                right2 = ImageIO.read(getClass().getResourceAsStream("../res/player/player_right_2.png"));
+                rightIdle = ImageIO.read(getClass().getResourceAsStream("../res/player/player_right_idle.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+  
+        public void update() {
+        ...
+
+Then we can call the method on the start of the class and update the default direction to "down"
+
+        public Player(GamePanel gamePanel, KeyHandler keyHandler) {
+            ...
+            getPlayerImage();
+        }
+
+        public void setDefaultValues() {
+            ...
+            direction = "down";
+        }
+
+Then we also update the changing directions according to which key was pressed:
+
+        public void update() {
+
+            if (keyHandler.upPressed) direction = "up";
+            if (keyHandler.downPressed) direction = "down";
+            if (keyHandler.leftPressed) direction = "left";
+            if (keyHandler.rightPressed) direction = "right";
+
+With that, we can now check the direction every frame and add the corresponding image to be drawn in a variable:
+
+        public void draw(Graphics2D graphics2D) {
+
+            BufferedImage image = null;
+    
+            switch (direction) {
+                case "up":
+                    image = up1;
+                    break;
+                case "down":
+                    image = down1;
+                    break;
+                case "left":
+                    image = left1;
+                    break;
+                case "right":
+                    image = right1;
+                    break;
+            }
+
+        graphics2D.drawImage(image, playerPositionX, playerPositionY, gamePanel.tileSize, gamePanel.tileSize, null)
+
+## Animation
+
+We create a `spriteCounter` and `spriteNumber` in Entity.
+
+        public class Entity {
+            ...
+            public int spriteCounter = 0;
+            public int spriteNumber = 1;
+
+Then, in Player Class, we can use them to animate the sprite. The `spriteCounter` will add up each frame. We can decide the threshold on which the spriteCounter will change the `spriteNumber` variable that will be the one to determine which sprite will be rendered.
+So now the image rendering will have extra conditions:
+
+        switch (direction) {
+        case "up":
+        if (spriteNumber == 1) image = up1;
+        if (spriteNumber == 2) image = upIdle;
+        if (spriteNumber == 3) image = up2;
+        if (spriteNumber == 4) image = upIdle;
+
+And inside the update() we add the counter to change the sprites according to the frames:
+
+        if (keyHandler.directionalKeyPressed) {
+            spriteCounter++;
+            if (spriteCounter > 6) {
+                switch (spriteNum) {
+                    case 1:
+                    spriteNum = 2;
+                    break;
+                    case 2:
+                    spriteNum = 3;
+                    break;
+                    case 3:
+                    spriteNum = 4;
+                    break;
+                    case 4:
+                    spriteNum = 1;
+            }
+            spriteCounter = 0;
+        }
+        
+         
+        
       
 
 
