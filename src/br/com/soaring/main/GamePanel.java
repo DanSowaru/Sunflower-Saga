@@ -53,6 +53,8 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
+        //--------------------------------------- SLEEP METHOD START ----------------------------//
+
         double drawInterval = 1000000000 / FPS; // Instead of drawing the screen every 1 000 000 000 nanosecond, we can do it every 0.016 seconds, if we divide that number by the FPS. This will slow down the processing and drawing.
 
         double nextDrawTime = System.nanoTime() + drawInterval; // we add a point in time to the next draw;
@@ -81,13 +83,9 @@ public class GamePanel extends JPanel implements Runnable {
                 throw new RuntimeException(e);
             }
         }
-    }
 
-
-//    // DELTA METHOD
-//    @Override
-//    public void run() {
-//
+        //--------------------------------------- SLEEP METHOD END ------------------------------//
+        //--------------------------------------- DELTA METHOD START ----------------------------//
 //        double drawInterval = 1000000000 / FPS;
 //        double delta = 0;
 //        long lastTime = System.nanoTime();
@@ -104,10 +102,11 @@ public class GamePanel extends JPanel implements Runnable {
 //                repaint();
 //                delta--;
 //            }
-//
-//
 //        }
-//    }
+        //--------------------------------------- DELTA METHOD END ----------------------------//
+    }
+
+
 
 
     // To update live the information that will be processed in real-time and rendered in the screen (such as character position);
