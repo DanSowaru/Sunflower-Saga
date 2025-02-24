@@ -90,8 +90,8 @@ public class TileManager {
         while (worldCol < gamePanel.maxWorldCol && worldRow < gamePanel.maxWorldRow) {
 
             int tileUnit = mapTileCoordinates[worldCol][worldRow]; // fetching the tile unit of the line and column;
-            int worldX = worldCol * gamePanel.tileSize; // the X coordinate in each tile draw;
-            int worldY = worldRow * gamePanel.tileSize; // the Y coordinate in each tile draw;
+            int worldX = worldCol * gamePanel.tileSize; // the X coordinate in each tile drawn;
+            int worldY = worldRow * gamePanel.tileSize; // the Y coordinate in each tile drawn;
             int screenX = worldX - gamePanel.player.worldPositionX + gamePanel.player.playerScreenPositionX; // used to verify if the current screen tile being rendered is in range of the character screen range;
             int screenY = worldY - gamePanel.player.worldPositionY + gamePanel.player.playerScreenPositionY; //
 

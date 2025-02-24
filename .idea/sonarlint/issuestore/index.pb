@@ -31,3 +31,7 @@ B
 Summary.md,4\8\489b330cb4c714f8fbcb6ab831d815c1eb854fe5
 U
 %src/br/com/soaring/entity/Player.java,6\9\699e4a3358e2910d2f3531204dfefea782818296
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+Y
+)src/br/com/soaring/res/maps/large_map.txt,d\9\d9a0fe33d75955ff64d7d6316e5b72c9e0a5b774
